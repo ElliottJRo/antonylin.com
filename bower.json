@@ -8,7 +8,11 @@
     "jquery": "2.1.1",
     "baron": "~0.7.10",
     "fastclick": "~1.0.6",
-    "font-awesome": "~4.3.0"
+    "font-awesome": "~4.3.0",
+    "wow.js": "~1.1.2",
+    "FitText.js": "git@github.com:davatron5000/FitText.js.git#~1.2.0",
+    "animate.css": "git@github.com:daneden/animate.css.git#~3.3.0",
+    "bootstrap": "~3.3.5"
   },
   "overrides": {
     "baron": {
@@ -16,6 +20,15 @@
         "development": "baron.js",
         "production": "baron.min.js"
       }
+    },
+    "animate.css": {
+      "main": "ignore"
+    },
+    "wow.js": {
+      "main": "ignore"
+    },
+    "font-awesome": {
+      "main": "ignore"
     }
   },
   "ignore": [

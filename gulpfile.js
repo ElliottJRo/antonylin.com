@@ -30,17 +30,11 @@ var paths = {
     // all the js that need to be concated in dist build for angular
     concatScripts: './app/scripts/**/*.js',
 
-    otherScripts: './app/*.js',
-
-    styles: 'app/styles/**/*.scss',
-
-    appSassFile: 'app/styles/main.scss',
-    landingSassFile: 'app/styles/landing.scss',
+    styles: 'app/styles/**/*.less',
+    mainStyleFile: 'app/styles/app.less',
 
     images: './public/img/**/*',
-    spriteImg: './app/sprites/*.png',
-    sprites: './app/scripts/sprites.scss',
-    index: ['./app/index.html', './app/video.html'],
+    index: './app/index.html',
     partials: ['./app/partials/*.html'],
 
     // == Finished build dirs
@@ -64,7 +58,7 @@ pipes.spriteData = function () {
 };
 
 pipes.orderedVendorScripts = function() {
-    return plugins.order(['jquery.js', 'angular.js']);
+    return plugins.order(['jquery.js']);
 };
 
 pipes.orderedAppScripts = function() {
@@ -152,26 +146,18 @@ pipes.scriptedPartials = function() {
 };
 
 pipes.builtAppStylesDev = function() {
-    return gulp.src(paths.appSassFile)
-        .pipe(plugins.sass({
-            includePaths: ['.' , 'bower_components/foundation/scss']
+    return gulp.src(paths.mainStyleFile)
+        .pipe(plugins.less({
+            paths: ['.', 'bower_components/bootstrap/less']
         }))
         .pipe(gulp.dest(paths.distDev));
 };
 
-pipes.builtLandingStylesDev = function() {
-    return gulp.src(paths.landingSassFile)
-        .pipe(plugins.sass({
-            includePaths: ['.' , 'bower_components/foundation/scss']
-        }))
-        .pipe(gulp.dest(paths.distDev));
-}
-
 pipes.builtAppStylesProd = function() {
-    return gulp.src(paths.appSassFile)
+    return gulp.src(paths.mainStyleFile)
         .pipe(plugins.sourcemaps.init())
-            .pipe(plugins.sass({
-                includePaths: ['.' , 'bower_components/foundation/scss']
+            .pipe(plugins.less({
+                paths: ['.', 'bower_components/bootstrap/less']
             }))
             .pipe(plugins.minifyCss())
         .pipe(plugins.sourcemaps.write())
@@ -182,7 +168,7 @@ pipes.builtAppStylesProd = function() {
 pipes.builtLandingStylesProd = function() {
     return gulp.src(paths.landingSassFile)
         .pipe(plugins.sourcemaps.init())
-            .pipe(plugins.sass())
+            .pipe(plugins.less())
             .pipe(plugins.minifyCss())
         .pipe(plugins.sourcemaps.write())
         .pipe(pipes.minifiedFileName())
@@ -242,11 +228,7 @@ pipes.builtAppDev = function() {
     process.env.NODE_ENV = "development";
 
     return es.merge(pipes.builtIndexDev(),
-        pipes.builtLandingStylesDev(),
-        pipes.builtOtherScriptsDev(),
-        pipes.builtPartialsDev(),
-        pipes.processedImagesDev(),
-        pipes.spriteData());
+        pipes.processedImagesDev());
 };
 
 pipes.builtAppProd = function() {
@@ -275,17 +257,8 @@ gulp.task('clean-prod', function() {
     return deferred.promise;
 });
 
-// checks html source files for syntax errors
-gulp.task('validate-partials', pipes.validatedPartials);
-
 // checks index.html for syntax errors
 gulp.task('validate-index', pipes.validatedIndex);
-
-// moves html source files into the dev environment
-gulp.task('build-partials-dev', pipes.builtPartialsDev);
-
-// converts partials to javascript using html2js
-gulp.task('convert-partials-to-js', pipes.scriptedPartials);
 
 // runs jshint on the dev server scripts
 gulp.task('validate-devserver-scripts', pipes.validatedDevServerScripts);
@@ -301,9 +274,6 @@ gulp.task('build-app-scripts-prod', pipes.builtAppScriptsProd);
 
 // compiles app sass and moves to the dev environment
 gulp.task('build-styles-dev', pipes.builtAppStylesDev);
-
-// compiles landing sass and moves to the dev environment
-gulp.task('build-landing-styles-dev', pipes.builtLandingStylesDev);
 
 // compiles and minifies app sass to css and moves to the prod environment
 gulp.task('build-styles-prod', pipes.builtAppStylesProd);
@@ -349,6 +319,7 @@ gulp.task('watch-dev', ['clean-build-app-dev', 'validate-devserver-scripts'], fu
             baseDir: './',
             routes: {
                 "/": "dist.dev",
+                "/bower_components": "dist.dev/bower_components",
                 "/public": "public"
             }
         }
