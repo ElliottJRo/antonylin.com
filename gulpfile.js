@@ -177,12 +177,12 @@ pipes.builtLandingStylesProd = function() {
 
 pipes.processedImagesDev = function() {
     return gulp.src(paths.images)
-        .pipe(gulp.dest(paths.distDev + '/images/'));
+        .pipe(gulp.dest(paths.distDev + '/img/'));
 };
 
 pipes.processedImagesProd = function() {
     return gulp.src(paths.images)
-        .pipe(gulp.dest(paths.distProd + '/images/'));
+        .pipe(gulp.dest(paths.distProd + '/img/'));
 };
 
 pipes.validatedIndex = function() {
