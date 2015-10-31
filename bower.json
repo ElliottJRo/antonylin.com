@@ -26,9 +26,6 @@
     },
     "wow.js": {
       "main": "ignore"
-    },
-    "font-awesome": {
-      "main": "ignore"
     }
   },
   "ignore": [

@@ -2,7 +2,7 @@ var gulp                = require('gulp');
 var browserSync         = require('browser-sync').create();
 var del                 = require('del');
 var plugins             = require('gulp-load-plugins')();
-var bowerFiles          = require('main-bower-files');
+var bowerFiles          = require('gulp-main-bower-files');
 var Q                   = require('q');
 var es                  = require('event-stream');
 
@@ -32,6 +32,7 @@ var paths = {
 
     styles: 'app/styles/**/*.less',
     mainStyleFile: 'app/styles/app.less',
+    fonts: 'bower_components/font-awesome/fonts',
 
     images: './public/img/**/*',
     index: './app/index.html',
@@ -107,7 +108,8 @@ pipes.builtAppScriptsProd = function() {
 };
 
 pipes.builtVendorScriptsDev = function() {
-    return gulp.src(bowerFiles())
+    return gulp.src('./bower.json')
+        .pipe(bowerFiles())
         .pipe(gulp.dest('dist.dev/bower_components'));
 };
 
